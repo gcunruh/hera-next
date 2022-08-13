@@ -12,19 +12,19 @@ const Steps = ({steps, currentStep}: {steps: any, currentStep: number}) => {
           <li key={step.name} className="md:flex-1">
             {index < currentStep ? (
               <div
-                className="group pl-4 py-2 flex flex-col border-l-4 border-indigo-600 hover:border-indigo-800 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4"
+                className="group pl-4 py-2 flex flex-col border-l-4 border-rose-500 hover:border-rose-800 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4"
               >
-                <span className="text-sm text-indigo-600 font-medium group-hover:text-indigo-800">
+                <span className="text-sm text-rose-500 font-medium group-hover:text-rose-800">
                   {step.id}
                 </span>
                 <span className="text-sm font-medium">{step.name}</span>
               </div>
             ) : index < currentStep ? (
               <div
-                className="pl-4 py-2 flex flex-col border-l-4 border-indigo-600 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4"
+                className="pl-4 py-2 flex flex-col border-l-4 border-rose-500 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4"
                 aria-current="step"
               >
-                <span className="text-sm text-indigo-600 font-medium">
+                <span className="text-sm text-rose-500 font-medium">
                   {step.id}
                 </span>
                 <span className="text-sm font-medium">{step.name}</span>
@@ -95,7 +95,7 @@ const Learn = ({ nextStep }: { nextStep: Function} ) => {
       <div>
         To read more about Hera's fund model, claims processing, and
         administration,{" "}
-        <a className="text-indigo-600 font-semibold" href="https://docs.google.com/document/d/1AlE1l3OXakVMIbT0FIXJRWjOMefC068TtZRPK9lGQR0/edit?usp=sharing">
+        <a className="text-rose-500 font-semibold" href="https://docs.google.com/document/d/1AlE1l3OXakVMIbT0FIXJRWjOMefC068TtZRPK9lGQR0/edit?usp=sharing">
           click here
         </a>
         .
@@ -105,7 +105,7 @@ const Learn = ({ nextStep }: { nextStep: Function} ) => {
           <button
             onClick={() => nextStep()}
             type="submit"
-            className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-rose-500 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
           >
             I Understand
           </button>
@@ -126,7 +126,7 @@ const ChooseFund = ({ fund, setFund, prevStep, nextStep }: {fund: string | undef
           type="button"
           className={`relative block w-full border-2 rounded-lg p-12 text-center focus:outline-none ${
             fund === "Supplemental"
-              ? "border-indigo-500"
+              ? "border-rose-500"
               : "hover:border-gray-400 border-gray-300"
           }`}
         >
@@ -155,7 +155,7 @@ const ChooseFund = ({ fund, setFund, prevStep, nextStep }: {fund: string | undef
           type="button"
           className={`relative block w-full border-2 rounded-lg p-12 text-center focus:outline-none ${
             fund === "Catastrophic"
-              ? "border-indigo-500"
+              ? "border-rose-500"
               : "hover:border-gray-400 border-gray-300"
           }`}
         >
@@ -183,7 +183,7 @@ const ChooseFund = ({ fund, setFund, prevStep, nextStep }: {fund: string | undef
           <button
             onClick={() => {setFund(undefined); prevStep()}}
             type="button"
-            className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
           >
             Back
           </button>
@@ -192,7 +192,7 @@ const ChooseFund = ({ fund, setFund, prevStep, nextStep }: {fund: string | undef
               fund ? nextStep() : null;
             }}
             type="submit"
-            className={`ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+            className={`ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-rose-500 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 ${
               fund ? "" : "cursor-not-allowed"
             }`}
           >
@@ -228,7 +228,7 @@ const ProvideInformation = ({ prevStep, nextStep }: { prevStep: Function, nextSt
                   name="first-name"
                   id="first-name"
                   autoComplete="given-name"
-                  className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                  className="max-w-lg block w-full shadow-sm focus:ring-rose-500 focus:border-rose-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
             </div>
@@ -246,7 +246,7 @@ const ProvideInformation = ({ prevStep, nextStep }: { prevStep: Function, nextSt
                   name="last-name"
                   id="last-name"
                   autoComplete="family-name"
-                  className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                  className="max-w-lg block w-full shadow-sm focus:ring-rose-500 focus:border-rose-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
             </div>
@@ -264,7 +264,7 @@ const ProvideInformation = ({ prevStep, nextStep }: { prevStep: Function, nextSt
                   name="email"
                   type="email"
                   autoComplete="email"
-                  className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                  className="block max-w-lg w-full shadow-sm focus:ring-rose-500 focus:border-rose-500 sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
             </div>
@@ -281,7 +281,7 @@ const ProvideInformation = ({ prevStep, nextStep }: { prevStep: Function, nextSt
                   id="country"
                   name="country"
                   autoComplete="country-name"
-                  className="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                  className="max-w-lg block focus:ring-rose-500 focus:border-rose-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                 >
                   <option>United States</option>
                   <option>Other</option>
@@ -298,14 +298,14 @@ const ProvideInformation = ({ prevStep, nextStep }: { prevStep: Function, nextSt
           <button
             onClick={() => prevStep()}
             type="button"
-            className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
           >
             Back
           </button>
           <button
             onClick={() => nextStep()}
             type="submit"
-            className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-rose-500 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
           >
             Save
           </button>
@@ -335,14 +335,14 @@ const Pay = ({ prevStep, nextStep, fund, premiums }: { prevStep: Function, nextS
         <button
           onClick={() => prevStep()}
           type="button"
-          className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
         >
           Back
         </button>
         <button
           onClick={() => nextStep()}
           type="submit"
-          className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-rose-500 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
         >
           Enroll
         </button>

@@ -18,7 +18,7 @@ const Home: NextPage = () => {
           <div className="my-6 w-24 text-center">
             <button
               type="button"
-              className="w-full items-center px-6 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full items-center px-6 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-rose-500 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
             >
               Enroll
             </button>

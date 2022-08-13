@@ -20,11 +20,9 @@ const Dashboard: NextPage = () => {
   const router = useRouter();
   const { publicKey } = useWallet();
 
-  console.log(publicKey);
-
-  useEffect(() => {
-      !publicKey ? router.push("/") : null;
-  }, []);
+  // useEffect(() => {
+  //     !publicKey ? router.push("/") : null;
+  // }, []);
 
   return (
     <div>
@@ -64,7 +62,7 @@ const Dashboard: NextPage = () => {
                 Claimed to Date
               </dt>
               <div className="w-full bg-gray-300 rounded-full">
-                <div className="bg-indigo-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full w-[25%]">
+                <div className="bg-rose-500 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full w-[25%]">
                   {" "}
                   50 <span className="hidden md:inline-block">USDC</span>
                 </div>
@@ -126,7 +124,7 @@ const Dashboard: NextPage = () => {
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-xs md:text-sm font-medium sm:pr-6">
                               <a
                                 href="#"
-                                className="text-indigo-600 hover:text-indigo-900"
+                                className="text-rose-500 hover:text-rose-900"
                               >
                                 View
                                 <span className="sr-only">, {person.name}</span>
@@ -150,14 +148,14 @@ const Dashboard: NextPage = () => {
         <Link href="/dashboard/submit">
           <button
             type="button"
-            className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-rose-500 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
           >
             Submit a claim
           </button>
         </Link>
         <button
           type="button"
-          className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
         >
           View performance
         </button>
