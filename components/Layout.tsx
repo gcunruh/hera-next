@@ -9,7 +9,7 @@ type LayoutProps = {
 export default function Layout ( { children }: LayoutProps )
 {
     return (
-        <div className="px-2 md:px-8">
+        <div className="px-4 md:px-8">
             <Header />
             <div className="bg-white w-full mx-auto text-black">
                 { children }
