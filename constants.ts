@@ -4,4 +4,11 @@ export const HERA_USDC_MINT = new PublicKey(
   "5kU3fkzBcmpirSbjDY99QqQ3Zq8ABks1JMzZxAVx16Da"
 );
 
-export const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json());
+export const fetcher = async (
+  input: RequestInfo,
+  init: RequestInit,
+  ...args: any[]
+) => {
+  const res = await fetch(input, init);
+  return res.json();
+};
