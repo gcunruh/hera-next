@@ -59,13 +59,14 @@ const Steps = ({steps, currentStep}: {steps: any, currentStep: number}) => {
 
 const Learn = ({ nextStep }: { nextStep: Function} ) => {
   return (
-    <div  className="md:pt-8">
+    <div className="md:pt-8">
       <div className="my-4">
         This is an experimental health insurance service designed to provide
         global health coverage to subscribers through a self-insurance pool.
         When you self-insure, you are taking on the risk that the fund may not
         be able to pay out in high-risk years. However, in low risk years, a
-        self-insurer will pay out redemptions back to subscribers, reducing your overall cost.
+        self-insurer will pay out redemptions back to subscribers, reducing your
+        overall cost.
       </div>
       <div className="mb-4 font-medium text-lg">
         Hera offers two funds designed for different goals
@@ -86,9 +87,9 @@ const Learn = ({ nextStep }: { nextStep: Function} ) => {
         </ol>
       </div>
       <div className="mb-4 font-medium text-lg">
-        Hera's insurance funds are administered on-chain through Solana. The
-        funds are also denominated in USDC. There are certain benefits to this
-        administration model including:
+        Hera&apos;s insurance funds are administered on-chain through Solana.
+        The funds are also denominated in USDC. There are certain benefits to
+        this administration model including:
         <ul className="list-disc font-normal text-base mt-2">
           <li>Trustless accounting</li>
           <li>Automated claims processing and reduced adminsitration costs</li>
@@ -104,9 +105,12 @@ const Learn = ({ nextStep }: { nextStep: Function} ) => {
         experimental insurance product with certain inherent risks.
       </div>
       <div>
-        To read more about Hera's fund model, claims processing, and
+        To read more about Hera&apos;s fund model, claims processing, and
         administration,{" "}
-        <a className="text-rose-500 font-semibold" href="https://docs.google.com/document/d/1AlE1l3OXakVMIbT0FIXJRWjOMefC068TtZRPK9lGQR0/edit?usp=sharing">
+        <a
+          className="text-rose-500 font-semibold"
+          href="https://docs.google.com/document/d/1AlE1l3OXakVMIbT0FIXJRWjOMefC068TtZRPK9lGQR0/edit?usp=sharing"
+        >
           click here
         </a>
         .
@@ -150,11 +154,11 @@ const ChooseFund = ({ funds, fund, setFund, prevStep, nextStep }: {funds: any, f
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              stroke-width="2"
+              strokeWidth="2"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
               />
             </svg>
