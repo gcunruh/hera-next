@@ -1,14 +1,25 @@
 import { useState } from "react";
+import useSWR from "swr";
 import type { NextPage } from "next";
+import { AnchorProvider } from "@project-serum/anchor";
+import useProgram from "../hooks/useProgram";
+import * as anchor from "@project-serum/anchor";
+import { Idl, Program } from "@project-serum/anchor";
+import { LAMPORTS_PER_SOL, PublicKey, Connection } from "@solana/web3.js";
+import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import Head from "next/head";
 import Image from "next/image";
 import next from "next";
+import { fetcher, HERA_USDC_MINT } from "../constants";
+import { Metaplex, keypairIdentity, walletAdapterIdentity } from "@metaplex-foundation/js";
+
+export type Maybe<T> = T | null;
 
 const Steps = ({steps, currentStep}: {steps: any, currentStep: number}) => {
   return (
     <nav aria-label="Progress" className="md:mb-6">
       <ol role="list" className="space-y-3 md:flex md:space-y-0 md:space-x-8">
-        {steps.map((step, index: number) => (
+        {steps.map((step: any, index: number) => (
           <li key={step.name} className="md:flex-1">
             {index < currentStep ? (
               <div
@@ -115,40 +126,43 @@ const Learn = ({ nextStep }: { nextStep: Function} ) => {
   );
 }
 
-const ChooseFund = ({ fund, setFund, prevStep, nextStep }: {fund: string | undefined, setFund: Function, prevStep: Function, nextStep: Function} ) => {
+const ChooseFund = ({ funds, fund, setFund, prevStep, nextStep }: {funds: any, fund: string, setFund: Function, prevStep: Function, nextStep: Function} ) => {
+  console.log(fund);
   return (
     <div className="pt-4 md:pt-8">
       <div className="flex flex-col md:flex-row gap-4">
-        <button
-          onClick={() => {
-            setFund("Supplemental");
-          }}
-          type="button"
-          className={`relative block w-full border-2 rounded-lg p-12 text-center focus:outline-none ${
-            fund === "Supplemental"
-              ? "border-rose-500"
-              : "hover:border-gray-400 border-gray-300"
-          }`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-10 w-10 mx-auto"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
+        {funds.map((i: any) => (
+          <button
+            onClick={() => {
+              setFund(i.name);
+            }}
+            type="button"
+            className={`relative block w-full border-2 rounded-lg p-12 text-center focus:outline-none ${
+              i.name === fund
+                ? "border-rose-500"
+                : "hover:border-gray-400 border-gray-300"
+            }`}
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-            />
-          </svg>
-          <span className="mt-2 block text-sm font-medium text-gray-900">
-            Supplemental
-          </span>
-        </button>
-        <button
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-10 w-10 mx-auto"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              />
+            </svg>
+            <span className="mt-2 block text-sm font-medium text-gray-900">
+              {i.name}
+            </span>
+          </button>
+        ))}
+        {/* <button
           onClick={() => {
             setFund("Catastrophic");
           }}
@@ -176,12 +190,15 @@ const ChooseFund = ({ fund, setFund, prevStep, nextStep }: {fund: string | undef
           <span className="mt-2 block text-sm font-medium text-gray-900">
             Catastrophic
           </span>
-        </button>
+        </button> */}
       </div>
       <div className="pt-5">
         <div className="flex justify-end">
           <button
-            onClick={() => {setFund(undefined); prevStep()}}
+            onClick={() => {
+              setFund(undefined);
+              prevStep();
+            }}
             type="button"
             className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
           >
@@ -204,9 +221,9 @@ const ChooseFund = ({ fund, setFund, prevStep, nextStep }: {fund: string | undef
   );
 }
 
-const ProvideInformation = ({ prevStep, nextStep }: { prevStep: Function, nextStep: Function}) => {
+const ProvideInformation = ({ prevStep, nextStep, setFirstName, setLastName, setEmail, setCountry, firstName, lastName, email, country }: { prevStep: Function, nextStep: Function, setFirstName: Function, setLastName: Function, setEmail: Function, setCountry: Function, firstName: string, lastName: string, email: string, country: string }) => {
   return (
-    <form className="space-y-8 divide-y divide-gray-200">
+    <div className="space-y-8 divide-y divide-gray-200">
       <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
         <div className="pt-4 md:pt-8 space-y-6 sm:pt-10 sm:space-y-5">
           <div>
@@ -229,6 +246,7 @@ const ProvideInformation = ({ prevStep, nextStep }: { prevStep: Function, nextSt
                   id="first-name"
                   autoComplete="given-name"
                   className="max-w-lg block w-full shadow-sm focus:ring-rose-500 focus:border-rose-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                  onChange={(event) => setFirstName(event.target.value)}
                 />
               </div>
             </div>
@@ -247,6 +265,7 @@ const ProvideInformation = ({ prevStep, nextStep }: { prevStep: Function, nextSt
                   id="last-name"
                   autoComplete="family-name"
                   className="max-w-lg block w-full shadow-sm focus:ring-rose-500 focus:border-rose-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                  onChange={(event) => setLastName(event.target.value)}
                 />
               </div>
             </div>
@@ -265,6 +284,7 @@ const ProvideInformation = ({ prevStep, nextStep }: { prevStep: Function, nextSt
                   type="email"
                   autoComplete="email"
                   className="block max-w-lg w-full shadow-sm focus:ring-rose-500 focus:border-rose-500 sm:text-sm border-gray-300 rounded-md"
+                  onChange={(event) => setEmail(event.target.value)}
                 />
               </div>
             </div>
@@ -282,13 +302,13 @@ const ProvideInformation = ({ prevStep, nextStep }: { prevStep: Function, nextSt
                   name="country"
                   autoComplete="country-name"
                   className="max-w-lg block focus:ring-rose-500 focus:border-rose-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                  onChange={(event) => setCountry(event.target.value)}
                 >
                   <option>United States</option>
                   <option>Other</option>
                 </select>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -303,31 +323,105 @@ const ProvideInformation = ({ prevStep, nextStep }: { prevStep: Function, nextSt
             Back
           </button>
           <button
-            onClick={() => nextStep()}
-            type="submit"
-            className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-rose-500 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+            onClick={() => {(firstName.length < 1 || lastName.length < 1 || email.length < 1 || country.length < 1) ? null : nextStep()}}
+            className={`ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-rose-500 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 ${(firstName.length < 1 || lastName.length < 1 || email.length < 1 || country.length < 1) ? "cursor-not-allowed" : ""}`}
           >
             Save
           </button>
         </div>
       </div>
-    </form>
+    </div>
   );
 }
 
-const Pay = ({ prevStep, nextStep, fund, premiums }: { prevStep: Function, nextStep: Function, fund: string, premiums: any}) => {
+const Pay = ({ prevStep, nextStep, funds, fund, program, programId, provider, fund_idx, firstName, lastName, email }: { prevStep: Function, nextStep: Function, funds: any, fund: string, program: Maybe<Program<Idl>>, programId: PublicKey, provider: AnchorProvider, fund_idx: string, firstName: string, lastName: string, email: string }) => {
+
+  async function handleEnrollment() {
+    const enrollmentSeeds = [
+      Buffer.from("enrollment"),
+      provider.wallet.publicKey.toBuffer()
+    ]
+
+    const [enrollmentPda, enrollmentBump] = await anchor.web3.PublicKey
+        .findProgramAddress(
+            enrollmentSeeds,
+            programId,
+    );
+
+    const idx = new anchor.BN(fund_idx);
+    const idxBuffer = idx.toArrayLike(Buffer, "le", 8);
+
+    const fundDataSeeds = [Buffer.from("fund_data"), idxBuffer];
+
+    const fundSeeds = [Buffer.from("fund"), idxBuffer];
+
+    const [fundDataPda, fundDataBump] = await anchor.web3.PublicKey.findProgramAddress(fundDataSeeds, programId);
+
+    const [fundPda, fundBump] = await anchor.web3.PublicKey.findProgramAddress(fundSeeds, programId);
+
+    const tokenAta = await getAssociatedTokenAddress(
+      HERA_USDC_MINT,
+      provider.wallet.publicKey,
+      true,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    )
+    try {
+      let tx = new anchor.web3.Transaction();
+
+      tx.add(
+        await program.methods.enroll(new anchor.BN(funds.find((obj: any) => obj.name === fund).fy_premium * LAMPORTS_PER_SOL)).accounts({
+          subscriber: provider.wallet.publicKey,
+          fundData: fundDataPda,
+          enrollment: enrollmentPda,
+          fund: fundPda,
+          fromAccount: tokenAta
+        }).instruction()
+      )
+
+      await provider.sendAndConfirm(tx)
+      console.log("enrolled on-chain!");
+    } catch (e) {
+      console.log(e);
+    }
+
+    // API
+    fetch(`${process.env.NEXT_PUBLIC_API}/enroll`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fund: fund,
+        pub_key: provider.wallet.publicKey.toBase58(),
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        paid_in: funds.find((obj: any) => obj.name === fund).fy_premium
+      }),
+    });
+    console.log("enrolled off-chain!");
+    nextStep();
+  }
+
   return (
     <div className="pt-4 md:pt-5">
       <div>
         <h3 className="text-lg leading-6 font-medium text-gray-900 mb-2">
-          You elected to enroll in the{" "}
-          <span className="font-semibold">{fund} Insurance Fund</span> from Hera Health
+          You have elected to enroll in the{" "}
+          <span className="font-semibold">{fund} Insurance Fund</span> from Hera
+          Health
         </h3>
       </div>
       <div className="text-sm">
-        The {fund} Insurance Fund is designed to provide coverage for healthcare needs. In order to recieve a reimbursement from the fund you will need to submit an image of a legitimate medical bill for care administered to the same name you provided in Step 3.
+        The {fund} Insurance Fund is designed to provide coverage for healthcare
+        needs. In order to recieve a reimbursement from the fund you will need
+        to submit an image of a legitimate medical bill for care administered to
+        the same name you provided in Step 3.
       </div>
-      <div className="mt-6 font-semibold text-lg text-right">600 USDC</div>
+      <div className="mt-6 font-semibold text-lg text-right">
+        {funds.find((obj: any) => obj.name === fund).fy_premium} USDC
+      </div>
       <div>
         <h2 className="text-sm text-right">Annual Premium Due Today</h2>
       </div>
@@ -340,7 +434,7 @@ const Pay = ({ prevStep, nextStep, fund, premiums }: { prevStep: Function, nextS
           Back
         </button>
         <button
-          onClick={() => nextStep()}
+          onClick={() => handleEnrollment()}
           type="submit"
           className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-rose-500 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
         >
@@ -348,24 +442,138 @@ const Pay = ({ prevStep, nextStep, fund, premiums }: { prevStep: Function, nextS
         </button>
       </div>
       <div className="text-xs mt-8 italic">
-        Note: When you click Enroll you will be paying your annual premium and will receive an insurance card NFT in your wallet. You will need to keep this NFT in the same wallet you paid your premium from in order to submit claims.
+        Note: When you click Enroll you will be paying your annual premium and
+        will be able to claim an insurance card NFT in your wallet. You will need to submit claims using the same wallet you use to enroll.
+      </div>
+    </div>
+  );
+}
+
+const Mint = ({ provider, firstName, lastName, fund, year, metaplex }: { provider: any, firstName: string, lastName: string, fund: string, year: number, metaplex: any}) => {
+
+  async function handleMint() {
+    const image_uri = await fetch(`${process.env.NEXT_PUBLIC_API}/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        pub_key: provider.wallet.publicKey.toBase58(),
+        name: firstName + " " + lastName,
+        year: year,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        return data.uri;
+      });
+
+    const metadata = {
+      name: "Hera Health Card",
+      symbol: "HH",
+      description: `Hera Health Insurance Card for the ${fund} Fund`,
+      seller_fee_basis: 0,
+      external_url: "https://herahealth.com",
+      edition: 1,
+      background_color: "FFFFFF",
+      attributes: [
+        {
+          trait_type: "Fund",
+          value: fund,
+        },
+        {
+          trait_type: "Year",
+          value: year,
+        }
+      ],
+      properties: {
+        category: "image",
+        creators: [
+          {
+            address: provider.wallet.publicKey.toBase58(),
+            share: 100,
+          },
+        ],
+        files: [
+          {
+            uri: image_uri,
+            type: "image/png",
+          },
+        ],
+      },
+      image: image_uri,
+    };
+
+    const uri = await fetch(`${process.env.NEXT_PUBLIC_API}/createmetadata`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(metadata),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        return data.uri;
+      });
+
+  console.log(uri)
+
+    const { nft } = await metaplex
+      .nfts()
+      .create({
+        uri: uri,
+        name: "Hera Health Card",
+        symbol: "HH",
+        sellerFeeBasisPoints: 0, // Represents 5.00%.
+      })
+      .run();
+  }
+
+  return (
+    <div className="pt-4 md:pt-5">
+      <div>
+        <h3 className="text-lg leading-6 font-medium text-gray-900 mb-2">
+          Congrats on enrolling!
+        </h3>
+      </div>
+      <div>
+        Click the button below to get your personalized insurance card
+        representing your enrollment in a{" "}
+        <span className="font-semibold">Hera Health</span> fund.
+      </div>
+      <div className="pt-4 flex justify-end">
+        <button
+          onClick={() => handleMint()}
+          type="submit"
+          className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-rose-500 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+        >
+          Get Card
+        </button>
       </div>
     </div>
   );
 }
 
 const Enroll: NextPage = () => {
+  const { data: funds, error } = useSWR(
+    "http://localhost:8000/api/funds",
+    fetcher
+  );
+  const program = useProgram();
+  const programId = new PublicKey(
+    "EhVhhvQEhyRELEKSsivfSo1YFxKa4btgspR9WGjcP6Ei"
+  );
+  const provider = program?.provider as AnchorProvider;
+  const connection = new Connection(
+    "https://solana-devnet.g.alchemy.com/v2/7WwfMB3zkSP2RxvTPskmt75A-C0K1jIZ"
+  );
+  const metaplex = new Metaplex(connection).use(walletAdapterIdentity(provider.wallet));
   const [step, setStep] = useState(1);
-  const [fund, setFund] = useState<"Supplemental" | "Catastrophic" | undefined>(undefined);
+  const [fund, setFund] = useState<"Supplemental" | "Catastrophic" | "">("");
   const [ firstName, setFirstName ] = useState("");
   const [ lastName, setLastName ] = useState("");
   const [ email, setEmail ] = useState("");
-  const [ country, setCountry ] = useState("");
-
-  const premiums = {
-    "supplemental": 200,
-    "catastrophic": 400
-  }
+  const [ country, setCountry ] = useState("United States");
 
   const steps = [
     { id: "Step 1", name: "Learn", href: "#" },
@@ -381,20 +589,80 @@ const Enroll: NextPage = () => {
   const nextStep = () => {
     setStep(step + 1);
   };
-    
   return (
-    <div className="w-full md:w-1/2 lg:w-1/2 mx-auto">
-      <div className="font-medium text-2xl mb-2 md:mb-10">Enroll</div>
-      <Steps steps={steps} currentStep={step} />
-      {
-        {
-          1: <Learn nextStep={nextStep} />,
-          2: <ChooseFund fund={fund} setFund={setFund} prevStep={prevStep} nextStep={nextStep} />,
-          3: <ProvideInformation prevStep={prevStep} nextStep={nextStep} />,
-          4: <Pay prevStep={prevStep} nextStep={nextStep} fund={fund ? fund : ""} premiums={premiums}/>,
-        }[step]
-      }
-    </div>
+    <>
+      {(!provider || !provider.wallet) ? (
+        <div className="my-0 md:my-8 mx-auto px-2 md:px-2 lg:px-24 text-white">
+          Connect your wallet
+        </div>
+      ) : (
+        <div className="w-full md:w-1/2 lg:w-1/2 mx-auto">
+          <div className="font-medium text-2xl mb-2 md:mb-10">Enroll</div>
+          <Steps steps={steps} currentStep={step} />
+          {
+            {
+              1: <Learn nextStep={nextStep} />,
+              2: (
+                <ChooseFund
+                  funds={funds}
+                  fund={fund}
+                  setFund={setFund}
+                  prevStep={prevStep}
+                  nextStep={nextStep}
+                />
+              ),
+              3: (
+                <ProvideInformation
+                  prevStep={prevStep}
+                  nextStep={nextStep}
+                  setFirstName={setFirstName}
+                  setLastName={setLastName}
+                  setEmail={setEmail}
+                  setCountry={setCountry}
+                  firstName={firstName}
+                  lastName={lastName}
+                  email={email}
+                  country={country}
+                />
+              ),
+              4: (
+                <Pay
+                  prevStep={prevStep}
+                  nextStep={nextStep}
+                  funds={funds}
+                  fund={fund ? fund : ""}
+                  program={program}
+                  programId={programId}
+                  provider={provider}
+                  fund_idx={
+                    funds &&
+                    fund &&
+                    funds.find((obj: any) => obj.name === fund).chain_id
+                  }
+                  firstName={firstName}
+                  lastName={lastName}
+                  email={email}
+                />
+              ),
+              5: (
+                <Mint
+                  provider={provider}
+                  year={
+                    funds &&
+                    fund &&
+                    funds.find((obj: any) => obj.name === fund).year
+                  }
+                  firstName={firstName}
+                  lastName={lastName}
+                  fund={fund}
+                  metaplex={metaplex}
+                />
+              ),
+            }[step]
+          }
+        </div>
+      )}
+    </>
   );
 };
 

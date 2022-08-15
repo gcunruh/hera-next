@@ -26,7 +26,7 @@ const Dashboard: NextPage = () => {
 
   return (
     <div>
-      <div className="bg-white shadow-md overflow-hidden rounded-md">
+      <div className="bg-white border border-gray-100 overflow-hidden rounded-md">
         <div className="px-4 py-5 sm:px-6">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
             Hello, Gabriel
@@ -57,12 +57,12 @@ const Dashboard: NextPage = () => {
               </dt>
               <dd className="mt-1 text-sm text-gray-900">2022</dd>
             </div>
-            <div className="sm:col-span-2">
+            <div className="">
               <dt className="text-sm font-medium text-gray-500 mb-1">
                 Claimed to Date
               </dt>
               <div className="w-full bg-gray-300 rounded-full">
-                <div className="bg-rose-500 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full w-[25%]">
+                <div className="bg-rose-500 text-xs font-medium text-white text-center p-0.5 leading-none rounded-full w-[25%]">
                   {" "}
                   50 <span className="hidden md:inline-block">USDC</span>
                 </div>

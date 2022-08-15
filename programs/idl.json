@@ -1,0 +1,244 @@
+{
+    "version": "0.1.0",
+    "name": "hera_solana",
+    "instructions": [{
+            "name": "initializeFund",
+            "accounts": [{
+                    "name": "fundData",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "creator",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "fund",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "mint",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "rent",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [{
+                    "name": "idx",
+                    "type": "u64"
+                },
+                {
+                    "name": "fyPremium",
+                    "type": "f32"
+                },
+                {
+                    "name": "fyAllowable",
+                    "type": "f32"
+                },
+                {
+                    "name": "year",
+                    "type": "u16"
+                }
+            ]
+        },
+        {
+            "name": "seedFund",
+            "accounts": [{
+                    "name": "sender",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "fund",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "fromAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [{
+                "name": "amount",
+                "type": "u64"
+            }]
+        },
+        {
+            "name": "enroll",
+            "accounts": [{
+                    "name": "subscriber",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "fundData",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "enrollment",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "fund",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "fromAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [{
+                "name": "paidIn",
+                "type": "u64"
+            }]
+        },
+        {
+            "name": "makeClaim",
+            "accounts": [{
+                    "name": "subscriber",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "enrollment",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "claim",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [{
+                    "name": "idx",
+                    "type": "u64"
+                },
+                {
+                    "name": "claimAmount",
+                    "type": "u16"
+                }
+            ]
+        }
+    ],
+    "accounts": [{
+            "name": "FundData",
+            "type": {
+                "kind": "struct",
+                "fields": [{
+                        "name": "creator",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "fyPremium",
+                        "type": "f32"
+                    },
+                    {
+                        "name": "fyAllowable",
+                        "type": "f32"
+                    },
+                    {
+                        "name": "year",
+                        "type": "u16"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Enrollment",
+            "type": {
+                "kind": "struct",
+                "fields": [{
+                        "name": "fund",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "subscriber",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "paidIn",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "bump",
+                        "type": "u8"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Claim",
+            "type": {
+                "kind": "struct",
+                "fields": [{
+                        "name": "status",
+                        "type": "string"
+                    },
+                    {
+                        "name": "claimAmount",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "bump",
+                        "type": "u8"
+                    }
+                ]
+            }
+        }
+    ],
+    "errors": [{
+        "code": 6000,
+        "name": "NotEligible",
+        "msg": "Ineligible!"
+    }],
+    "metadata": {
+        "address": "EhVhhvQEhyRELEKSsivfSo1YFxKa4btgspR9WGjcP6Ei"
+    }
+}
