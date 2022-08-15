@@ -133,6 +133,7 @@ const ChooseFund = ({ funds, fund, setFund, prevStep, nextStep }: {funds: any, f
       <div className="flex flex-col md:flex-row gap-4">
         {funds.map((i: any) => (
           <button
+            key={i.uuid}
             onClick={() => {
               setFund(i.name);
             }}
