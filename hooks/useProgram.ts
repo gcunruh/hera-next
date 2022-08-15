@@ -2,7 +2,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { Idl, Program, AnchorProvider } from "@project-serum/anchor";
 import { useEffect, useState } from "react";
 import { PublicKey } from "@solana/web3.js";
-import { openRpc } from "../programs/openRPC";
+import { openRpc } from "../programs/openRpc";
 import idl from "../programs/idl.json";
 
 export type Maybe<T> = T | null;
