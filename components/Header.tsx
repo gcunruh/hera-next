@@ -3,6 +3,8 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from 'react';
+import useSWR from 'swr';
+import { fetcher } from '../constants';
 
 const NavLink = ({text, path, active}:{text:string, path:string, active?:boolean}) => {
   return (
@@ -15,6 +17,7 @@ const NavLink = ({text, path, active}:{text:string, path:string, active?:boolean
 export default function Header() {
   const router = useRouter();
   const { publicKey } = useWallet();
+  const { data: user, error } = useSWR(`${process.env.NEXT_PUBLIC_API}/subscriber/${publicKey}`, fetcher)
 
   return (
     <header className="flex flex-row justify-between py-2 items-center">
@@ -26,11 +29,24 @@ export default function Header() {
       </Link>
       <div className="flex flex-row items-center gap-4">
         {/* <NavLink text="Home" path="/" active={router.pathname == "/" ? true : false}/> */}
-        <NavLink
-          text="Enroll"
-          path="/enroll"
-          active={router.pathname == "/enroll" ? true : false}
-        />
+        {publicKey ? (
+          user ? (
+            <NavLink
+              text="Dashboard"
+              path="/dashboard"
+              active={router.pathname == "/dashboard" ? true : false}
+            />
+          ) : (
+            <NavLink
+              text="Enroll"
+              path="/enroll"
+              active={router.pathname == "/enroll" ? true : false}
+            />
+          )
+        ) : (
+          null
+        )}
+
         <WalletMultiButton className="custom-wallet-button" />
       </div>
     </header>

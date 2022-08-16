@@ -9,9 +9,11 @@ import { LAMPORTS_PER_SOL, PublicKey, Connection } from "@solana/web3.js";
 import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import next from "next";
 import { fetcher, HERA_USDC_MINT } from "../constants";
 import { Metaplex, keypairIdentity, walletAdapterIdentity } from "@metaplex-foundation/js";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export type Maybe<T> = T | null;
 
@@ -565,6 +567,7 @@ const Enroll: NextPage = () => {
     `${process.env.NEXT_PUBLIC_API}/funds`,
     fetcher
   );
+  const { publicKey } = useWallet(); 
   const program = useProgram();
   const programId = new PublicKey(
     "EhVhhvQEhyRELEKSsivfSo1YFxKa4btgspR9WGjcP6Ei"
@@ -579,6 +582,11 @@ const Enroll: NextPage = () => {
   const [ lastName, setLastName ] = useState("");
   const [ email, setEmail ] = useState("");
   const [ country, setCountry ] = useState("United States");
+
+  const { data: user } = useSWR(
+    `${process.env.NEXT_PUBLIC_API}/subscriber/${publicKey}`,
+    fetcher
+  );
 
   const steps = [
     { id: "Step 1", name: "Learn", href: "#" },
@@ -599,6 +607,19 @@ const Enroll: NextPage = () => {
     <>
       {!provider ? (
         <div className="my-0 md:my-8 mx-auto px-2 md:px-2 lg:px-24 text-white"></div>
+      ) : user ? (
+        <div className="flex flex-col my-0 md:my-8">
+          Already enrolled!!
+          <Link href="/dashboard">
+            <a className="">
+              <button
+                className="my-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-rose-500 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+              >
+                Dashboard
+              </button>
+            </a>
+          </Link>
+        </div>
       ) : (
         <div className="w-full md:w-1/2 lg:w-1/2 mx-auto">
           <div className="font-medium text-2xl mb-2 md:mb-10">Enroll</div>

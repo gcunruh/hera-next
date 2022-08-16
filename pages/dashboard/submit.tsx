@@ -5,20 +5,97 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import useSWR from "swr";
+import { fetcher } from "../../constants";
+import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { AnchorProvider } from "@project-serum/anchor";
+import * as anchor from "@project-serum/anchor";
+import useProgram from "../../hooks/useProgram";
 
 const Submit: NextPage = () => {
+  const program = useProgram();
+  const programId = new PublicKey(
+    "EhVhhvQEhyRELEKSsivfSo1YFxKa4btgspR9WGjcP6Ei"
+  );
+  const provider = program?.provider as AnchorProvider;
   const router = useRouter();
   const { publicKey } = useWallet();
   const [submit, setSubmit] = useState(false);
+  const [about, setAbout] = useState("");
+  const [amount, setAmount] = useState(0.00);
+  const [currency, setCurrency] = useState("USD");
+  const { data: user } = useSWR(
+    `${process.env.NEXT_PUBLIC_API}/subscriber/${publicKey}`,
+    fetcher
+  );
 
   // useEffect(() => {
   //   !publicKey ? router.push("/") : null;
   // }, []);
 
+  async function handleSubmission() {
+    const hr_idx = parseInt((Date.now() / 1000).toString());
+    const claimIdx = new anchor.BN(hr_idx)
+    const claimIdxBuffer = claimIdx.toArrayLike(Buffer, "le", 8)
+
+    const enrollmentSeeds = [
+      Buffer.from("enrollment"),
+      provider.wallet.publicKey.toBuffer(),
+    ];
+
+    const [enrollmentPda, enrollmentBump] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        enrollmentSeeds,
+        programId
+      );
+
+    const claimSeeds = [
+      Buffer.from("claim"),
+      provider.wallet.publicKey.toBuffer(),
+      enrollmentPda.toBuffer(),
+      claimIdxBuffer,
+    ];
+
+    const [claimPda, claimBump] =
+      await anchor.web3.PublicKey.findProgramAddress(claimSeeds, programId);
+
+    let tx = new anchor.web3.Transaction();
+
+    program &&
+    tx.add(
+      await program.methods
+        .makeClaim(claimIdx, new anchor.BN(amount * LAMPORTS_PER_SOL))
+        .accounts({
+          subscriber: provider.wallet.publicKey,
+          enrollment: enrollmentPda,
+          claim: claimPda,
+        })
+        .instruction()
+    );
+
+    await provider.sendAndConfirm(tx);
+    console.log("created on-chain!");
+
+    fetch(`${process.env.NEXT_PUBLIC_API}/claim`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        pub_key: publicKey,
+        enrollment_id: user.enrollments[0].uuid,
+        file_support: "http://www.google.com",
+        claim_amount: amount.toFixed(2),
+      }),
+    });
+    console.log("created off-chain!");
+    setSubmit(true);
+  }
+
   return (
     <div className="w-full md:w-1/2 lg:w-1/2 mx-auto">
       {!submit ? (
-        <form className="space-y-4">
+        <div className="space-y-4">
           <div className="space-y-8 divide-y divide-gray-200">
             <div>
               <div>
@@ -44,6 +121,7 @@ const Submit: NextPage = () => {
                       rows={3}
                       className="shadow-sm focus:ring-rose-500 focus:border-rose-500 block w-full sm:text-sm border border-gray-300 rounded-md"
                       defaultValue={""}
+                      onChange={(event) => setAbout(event.target.value)}
                     />
                   </div>
                   <p className="mt-2 text-sm text-gray-500">
@@ -96,6 +174,26 @@ const Submit: NextPage = () => {
                     </div>
                   </div>
                 </div>
+                <div className="sm:col-span-6">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Claim Amount
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      type="number"
+                      name="allowable"
+                      id="allowable"
+                      className="shadow-sm focus:ring-rose-500 focus:border-rose-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                      placeholder={amount.toString()}
+                      onChange={(event) =>
+                        setAmount(parseInt(event.target.value))
+                      }
+                    />
+                  </div>
+                </div>
                 <div className="sm:col-span-3">
                   <label
                     htmlFor="country"
@@ -109,10 +207,12 @@ const Submit: NextPage = () => {
                       name="country"
                       autoComplete="country-name"
                       className="shadow-sm focus:ring-rose-500 focus:border-rose-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                      onChange={(event) => setCurrency(event.target.value)}
                     >
                       <option>USD</option>
                       <option>CAD</option>
                       <option>EUR</option>
+                      <option>Other</option>
                     </select>
                   </div>
                   <p className="mt-2 text-sm text-gray-500">
@@ -136,7 +236,7 @@ const Submit: NextPage = () => {
                 </button>
               </Link>
               <button
-                onClick={() => setSubmit(true)}
+                onClick={() => handleSubmission()}
                 type="submit"
                 className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-rose-500 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
               >
@@ -144,7 +244,7 @@ const Submit: NextPage = () => {
               </button>
             </div>
           </div>
-        </form>
+        </div>
       ) : (
         <div className="text-lg leading-6 font-medium text-gray-900 my-4 md:mt-8">
           Your claim is now being processed! Return to your{" "}

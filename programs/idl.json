@@ -162,7 +162,7 @@
                 },
                 {
                     "name": "claimAmount",
-                    "type": "u16"
+                    "type": "u64"
                 }
             ]
         }
@@ -237,8 +237,5 @@
         "code": 6000,
         "name": "NotEligible",
         "msg": "Ineligible!"
-    }],
-    "metadata": {
-        "address": "EhVhhvQEhyRELEKSsivfSo1YFxKa4btgspR9WGjcP6Ei"
-    }
+    }]
 }
