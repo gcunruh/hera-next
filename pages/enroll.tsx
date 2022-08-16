@@ -562,7 +562,7 @@ const Mint = ({ provider, firstName, lastName, fund, year, metaplex }: { provide
 
 const Enroll: NextPage = () => {
   const { data: funds, error } = useSWR(
-    "http://localhost:8000/api/funds",
+    `${process.env.NEXT_PUBLIC_API}/funds`,
     fetcher
   );
   const program = useProgram();

@@ -9,7 +9,7 @@ import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_I
 import useSWR from "swr";
 
 const Admin: NextPage = () => {
-  const { data: funds, error } = useSWR('http://localhost:8000/api/funds', fetcher);
+  const { data: funds, error } = useSWR(`${process.env.NEXT_PUBLIC_API}/funds`, fetcher);
   const program = useProgram();
   const programId = new PublicKey(
       "EhVhhvQEhyRELEKSsivfSo1YFxKa4btgspR9WGjcP6Ei"
