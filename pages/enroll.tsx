@@ -374,6 +374,7 @@ const Pay = ({ prevStep, nextStep, funds, fund, program, programId, provider, fu
     try {
       let tx = new anchor.web3.Transaction();
 
+      program &&
       tx.add(
         await program.methods.enroll(new anchor.BN(funds.find((obj: any) => obj.name === fund).fy_premium * LAMPORTS_PER_SOL)).accounts({
           subscriber: provider.wallet.publicKey,

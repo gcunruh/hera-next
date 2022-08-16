@@ -44,6 +44,7 @@ const Admin: NextPage = () => {
     try {
       let tx = new anchor.web3.Transaction();
 
+      program &&
       tx.add(
         await program.methods
           .initializeFund(idx, premium, allowable, year)
@@ -92,6 +93,8 @@ const Admin: NextPage = () => {
 
     try {
       let tx = new anchor.web3.Transaction();
+
+      program &&
       tx.add(
         await program.methods
           .seedFund(new anchor.BN(amount * LAMPORTS_PER_SOL))
@@ -219,10 +222,10 @@ const Admin: NextPage = () => {
                   name="fund"
                   className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm rounded-md"
                   placeholder="Select Fund"
-                  onChange={(event) => setFund(funds.find(obj => obj.name === event.target.value))}
+                  onChange={(event) => setFund(funds.find((obj: any) => obj.name === event.target.value))}
                 >
                   {funds &&
-                    funds.map((i) => <option key={i.uuid}>{i.name}</option>)}
+                    funds.map((i: any) => <option key={i.uuid}>{i.name}</option>)}
                 </select>
               </div>
               <div className="mb-2">
