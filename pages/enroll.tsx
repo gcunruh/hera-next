@@ -479,7 +479,7 @@ const Mint = ({ provider, firstName, lastName, fund, year, metaplex }: { provide
       symbol: "HH",
       description: `Hera Health Insurance Card for the ${fund} Fund`,
       seller_fee_basis: 0,
-      external_url: "https://herahealth.com",
+      external_url: "https://hera-next.vercel.app/",
       edition: 1,
       background_color: "FFFFFF",
       attributes: [
@@ -490,7 +490,7 @@ const Mint = ({ provider, firstName, lastName, fund, year, metaplex }: { provide
         {
           trait_type: "Year",
           value: year,
-        }
+        },
       ],
       properties: {
         category: "image",
