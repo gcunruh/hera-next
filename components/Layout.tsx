@@ -1,4 +1,5 @@
 import React from "react";
+import Footer from "./Footer";
 // import Footer from "./Footer";
 import Header from "./Header";
 
@@ -14,6 +15,7 @@ export default function Layout ( { children }: LayoutProps )
             <div className="bg-white w-full mx-auto text-black">
                 { children }
             </div>
+            <Footer />
         </div>
     );
 }

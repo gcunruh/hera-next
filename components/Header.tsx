@@ -2,6 +2,7 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useWallet } from "@solana/wallet-adapter-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from 'react';
 
 const NavLink = ({text, path, active}:{text:string, path:string, active?:boolean}) => {
   return (
