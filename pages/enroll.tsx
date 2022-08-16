@@ -607,7 +607,7 @@ const Enroll: NextPage = () => {
     <>
       {!provider ? (
         <div className="my-0 md:my-8 mx-auto px-2 md:px-2 lg:px-24 text-white"></div>
-      ) : user ? (
+      ) : user && email.length < 1 ? (
         <div className="flex flex-col my-0 md:my-8">
           Already enrolled!!
           <Link href="/dashboard">
