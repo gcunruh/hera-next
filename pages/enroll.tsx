@@ -597,9 +597,8 @@ const Enroll: NextPage = () => {
   };
   return (
     <>
-      {(!provider || !provider.wallet) ? (
+      {(!provider) ? (
         <div className="my-0 md:my-8 mx-auto px-2 md:px-2 lg:px-24 text-white">
-          Connect your wallet
         </div>
       ) : (
         <div className="w-full md:w-1/2 lg:w-1/2 mx-auto">
