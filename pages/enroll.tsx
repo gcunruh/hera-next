@@ -573,7 +573,6 @@ const Enroll: NextPage = () => {
   const connection = new Connection(
     "https://solana-devnet.g.alchemy.com/v2/7WwfMB3zkSP2RxvTPskmt75A-C0K1jIZ"
   );
-  const metaplex = new Metaplex(connection).use(walletAdapterIdentity(provider.wallet));
   const [step, setStep] = useState(1);
   const [fund, setFund] = useState<"Supplemental" | "Catastrophic" | "">("");
   const [ firstName, setFirstName ] = useState("");
@@ -595,11 +594,11 @@ const Enroll: NextPage = () => {
   const nextStep = () => {
     setStep(step + 1);
   };
+
   return (
     <>
-      {(!provider) ? (
-        <div className="my-0 md:my-8 mx-auto px-2 md:px-2 lg:px-24 text-white">
-        </div>
+      {!provider ? (
+        <div className="my-0 md:my-8 mx-auto px-2 md:px-2 lg:px-24 text-white"></div>
       ) : (
         <div className="w-full md:w-1/2 lg:w-1/2 mx-auto">
           <div className="font-medium text-2xl mb-2 md:mb-10">Enroll</div>
@@ -660,7 +659,9 @@ const Enroll: NextPage = () => {
                   firstName={firstName}
                   lastName={lastName}
                   fund={fund}
-                  metaplex={metaplex}
+                  metaplex={new Metaplex(connection).use(
+                    walletAdapterIdentity(provider.wallet)
+                  )}
                 />
               ),
             }[step]
